@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - NBA Fun Facts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        nba: {
+                            purple: '#552583',
+                            gold: '#FDB927',
+                            dark: '#171717',
+                            light: '#F5F5F5'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow { text-shadow: 2px 2px 4px rgba(0,0,0,0.7); }
+            .card-hover { transition: transform .3s ease, box-shadow .3s ease; }
+            .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0,0,0,.1), 0 10px 10px -5px rgba(0,0,0,.04); }
+            .hero-gradient { background: linear-gradient(to right, rgba(85,37,131,.9), rgba(24,24,24,.8)); }
+        }
+    </style>
+    <link rel="alternate" hreflang="en" href="/about.html">
+    <link rel="alternate" hreflang="zh-CN" href="/cn/about.html">
+    <link rel="alternate" hreflang="x-default" href="/about.html">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8WF0S87W7F"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);} 
+      gtag('js', new Date());
+      gtag('config', 'G-8WF0S87W7F');
+    </script>
+        <link rel="icon" href="favicon.ico">
+    <meta name="description" content="About NBA Fun Facts: our vision, team, and contact information.">
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- 导航栏 -->
+    <nav class="bg-nba-purple text-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-basketball-ball text-2xl text-nba-gold"></i>
+                <h1 class="text-xl font-bold"><a href="index.html">NBA Fun Facts</a></h1>
+            </div>
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="index.html" class="text-white hover:text-nba-gold transition-colors duration-300 flex items-center"><i class="fa fa-home mr-1"></i> Home</a>
+                <a href="about.html" class="text-nba-gold transition-colors duration-300 flex items-center"><i class="fa fa-info-circle mr-1"></i> About</a>
+                <a href="privacy.html" class="text-white hover:text-nba-gold transition-colors duration-300 flex items-center"><i class="fa fa-shield mr-1"></i> Privacy Policy</a>
+                <a href="cn/about.html" class="text-white hover:text-nba-gold transition-colors duration-300 flex items-center"><i class="fa fa-globe mr-1"></i> 中文</a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-toggle" class="text-white hover:text-nba-gold transition-colors duration-300"><i class="fa fa-bars text-xl"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 移动端折叠菜单 -->
+    <div id="mobile-menu" class="md:hidden bg-nba-purple text-white px-4 py-3 hidden">
+        <div class="flex flex-col space-y-3">
+            <a href="index.html" class="text-white hover:text-nba-gold transition-colors duration-300 flex items-center"><i class="fa fa-home mr-1"></i> Home</a>
+            <a href="about.html" class="text-nba-gold transition-colors duration-300 flex items-center"><i class="fa fa-info-circle mr-1"></i> About</a>
+            <a href="privacy.html" class="text-white hover:text-nba-gold transition-colors duration-300 flex items-center"><i class="fa fa-shield mr-1"></i> Privacy Policy</a>
+            <a href="cn/about.html" class="text-white hover:text-nba-gold transition-colors duration-300 flex items-center"><i class="fa fa-globe mr-1"></i> 中文 (Chinese)</a>
+        </div>
+    </div>
+
+    <!-- Hero -->
+    <header class="relative h-[40vh] min-h-[320px] flex items-center">
+        <div class="absolute inset-0 z-0">
+            <img src="https://picsum.photos/id/1067/1920/800" alt="About" class="w-full h-full object-cover">
+            <div class="absolute inset-0 hero-gradient"></div>
+        </div>
+        <div class="container mx-auto px-4 z-10">
+            <div class="max-w-3xl">
+                <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 text-shadow">About</h1>
+                <p class="text-lg text-gray-100">Learn the story, vision, and team behind NBA Fun Facts</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- 内容区：Our Mission -->
+    <section class="container mx-auto px-4 py-12">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Our Mission</h2>
+                <p class="text-gray-700 leading-relaxed mb-4">NBA Fun Facts is dedicated to discovering, organizing, and sharing lesser‑known yet reliable and valuable NBA knowledge—past and present. We systematize scattered information into readable, searchable, and extensible content.</p>
+                <p class="text-gray-700 leading-relaxed">We stand for <span class="font-semibold">accuracy</span>, <span class="font-semibold">clear structure</span>, and <span class="font-semibold">great experience</span>. This means professional sourcing and thoughtful presentation that remain friendly and sustainable.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 内容区：团队与方法论 -->
+    <section class="container mx-auto px-4 pb-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">Who We Are</h3>
+                <p class="text-gray-700 leading-relaxed">We are creators and developers who love basketball and knowledge sharing. We focus on player stories, team history, rules evolution, stats trivia, and cultural context—showcasing the NBA’s multidimensional beauty.</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">How We Work</h3>
+                <p class="text-gray-700 leading-relaxed">We cross‑verify with public and trustworthy sources; use scripts to ensure consistent, maintainable formats; and pursue clear, readable, and extensible design and interactions.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Us -->
+    <section class="container mx-auto px-4 pb-16">
+        <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Contact Us</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <div class="space-y-3 text-gray-700">
+                        <div class="flex items-center"><i class="fa fa-envelope text-nba-purple w-6"></i><span> hcf@foxmail.com                        </span></div>
+                        <div class="flex items-center"><i class="fa fa-twitter text-nba-purple w-6"></i><span> @nbacoldfacts</span></div>
+                        <div class="flex items-center"><i class="fa fa-map-marker text-nba-purple w-6"></i><span> Longhua District, Shenzhen</span></div>
+                    </div>
+                </div>
+                <div>
+                    <form class="space-y-3">
+                        <input type="text" placeholder="Your name" class="w-full px-3 py-2 rounded border focus:outline-none focus:ring-2 focus:ring-nba-gold">
+                        <input type="email" placeholder="Your email" class="w-full px-3 py-2 rounded border focus:outline-none focus:ring-2 focus:ring-nba-gold">
+                        <textarea rows="4" placeholder="Message..." class="w-full px-3 py-2 rounded border focus:outline-none focus:ring-2 focus:ring-nba-gold"></textarea>
+                        <button type="button" class="bg-nba-gold hover:bg-yellow-500 text-nba-dark font-bold py-2 px-4 rounded">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-nba-dark text-white pt-12 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="text-center text-gray-400 text-sm">© 2023 NBA Fun Facts - For learning and communication only</div>
+        </div>
+    </footer>
+    <script>
+    (function(){
+        var btn = document.getElementById('mobile-menu-toggle');
+        var menu = document.getElementById('mobile-menu');
+        if(!btn || !menu) return;
+        btn.addEventListener('click', function(){
+            menu.classList.toggle('hidden');
+        });
+    })();
+    </script>
+</body>
+</html>
+
+
