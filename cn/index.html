@@ -250,6 +250,15 @@
         </div>
     </section>
 
+    <!-- NBA名人 -->
+    <section id="famous" class="container mx-auto px-4 py-16">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800">NBA名人</h2>
+            <p class="text-gray-600">点击标签查看相关冷知识</p>
+        </div>
+        <div id="famous-tags" class="flex flex-wrap gap-3 justify-center"></div>
+    </section>
+
     <!-- 订阅区 -->
     <section class="bg-nba-dark text-white py-16">
         <div class="container mx-auto px-4">
@@ -400,25 +409,11 @@
             });
         });
 
-        // 加载更多功能
+        // 加载更多 + 首屏渲染（从 cn/nba.json 获取，按 id 倒序，默认12条）
         (function() {
             const grid = document.getElementById('facts-grid');
             const btn = document.getElementById('load-more-btn');
             if (!grid || !btn) return;
-
-            // 解析当前已有卡片的最大id
-            function getCurrentMaxId() {
-                const links = Array.from(grid.querySelectorAll('a[href^="nba_"]'));
-                let maxId = 0;
-                links.forEach(a => {
-                    const m = a.getAttribute('href').match(/nba_(\d+)\.html/i);
-                    if (m) {
-                        const id = parseInt(m[1], 10);
-                        if (!isNaN(id)) maxId = Math.max(maxId, id);
-                    }
-                });
-                return maxId;
-            }
 
             function escapeHtml(str) {
                 return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -429,12 +424,12 @@
                 const title = escapeHtml(item.title || '');
                 const detail = (item.detail || '').slice(0, 40) + '...';
                 const text = escapeHtml(detail);
-                const img = `https://picsum.photos/id/${(item.id || 1) % 1000}/600/400`;
+                const img = item.image || `https://picsum.photos/id/${(item.id || 1) % 1000}/600/400`;
                 const alt = title;
                 return `
             <a href="${link}" class="block">
                 <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
-                    <img src="${img}" alt="${alt}" class="w-full h-56 object-cover">
+                    <img src="${img}" alt="${alt}" class="w-full h-56 object-cover" onerror="this.onerror=null;this.src='https://picsum.photos/seed/nba-${item.id}/600/400'">
                     <div class="p-6">
                         <span class="inline-block bg-nba-purple text-white text-xs font-semibold px-3 py-1 rounded-full mb-3">冷门知识</span>
                         <h3 class="font-bold text-xl mb-3">${title}</h3>
@@ -447,42 +442,64 @@
             </a>`;
             }
 
-            let cache = null; // 缓存 nba.json
+            let cache = null;       // 原始数据
+            let sorted = [];        // 按 id 倒序
+            let rendered = 0;       // 已渲染数量
+            const INITIAL = 12;     // 首屏数量
+            const PAGE_SIZE = 6;    // 每次“加载更多”数量
 
-            async function loadMore() {
+            async function ensureCache() {
+                if (!cache) {
+                    const res = await fetch('nba.json', { cache: 'no-store' });
+                    cache = await res.json();
+                    sorted = cache
+                        .filter(x => typeof x.id === 'number')
+                        .sort((a, b) => b.id - a.id);
+                }
+            }
+
+            function renderNext(n) {
+                const next = sorted.slice(rendered, rendered + n);
+                if (next.length === 0) {
+                    btn.textContent = '加载完成';
+                    btn.classList.add('cursor-not-allowed');
+                    btn.disabled = true;
+                    return;
+                }
+                const html = next.map(buildCard).join('\n');
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = html;
+                Array.from(wrapper.children).forEach(node => grid.appendChild(node));
+                rendered += next.length;
+                if (rendered >= sorted.length) {
+                    btn.textContent = '加载完成';
+                    btn.classList.add('cursor-not-allowed');
+                    btn.disabled = true;
+                }
+            }
+
+            async function init() {
+                // 清空静态占位卡片
+                grid.innerHTML = '';
                 btn.disabled = true;
                 btn.classList.add('opacity-60');
                 try {
-                    if (!cache) {
-                        const res = await fetch('../nba.json', { cache: 'no-store' });
-                        cache = await res.json();
-                    }
-                    const maxId = getCurrentMaxId();
-                    // 找到比 maxId 大的项目并按 id 升序取6条
-                    const next = cache
-                        .filter(x => typeof x.id === 'number' && x.id > maxId)
-                        .sort((a, b) => a.id - b.id)
-                        .slice(0, 6);
-                    if (next.length === 0) {
-                        btn.textContent = '加载完成';
-                        btn.classList.add('cursor-not-allowed');
-                        return;
-                    }
-                    const html = next.map(buildCard).join('\n');
-                    const wrapper = document.createElement('div');
-                    wrapper.innerHTML = html;
-                    // 逐个插入以利于样式过渡
-                    Array.from(wrapper.children).forEach(node => grid.appendChild(node));
+                    await ensureCache();
+                    renderNext(INITIAL);
                 } catch (e) {
                     console.error(e);
                     btn.textContent = '加载失败，重试';
                 } finally {
-                    btn.disabled = false;
-                    btn.classList.remove('opacity-60');
+                    if (!btn.classList.contains('cursor-not-allowed')) {
+                        btn.disabled = false;
+                        btn.classList.remove('opacity-60');
+                    }
                 }
             }
 
-            btn.addEventListener('click', loadMore);
+            btn.addEventListener('click', () => renderNext(PAGE_SIZE));
+            // 首屏渲染
+            init();
         })();
 
         // 搜索功能：按 title 过滤并渲染结果
@@ -503,12 +520,12 @@
                 const title = escapeHtml(item.title || '');
                 const detail = (item.detail || '').slice(0, 40) + '...';
                 const text = escapeHtml(detail);
-                const img = `https://picsum.photos/id/${(item.id || 1) % 1000}/600/400`;
+                const img = item.image || `https://picsum.photos/id/${(item.id || 1) % 1000}/600/400`;
                 const alt = title;
                 return `
             <a href="${link}" class="block">
                 <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
-                    <img src="${img}" alt="${alt}" class="w-full h-56 object-cover">
+                    <img src="${img}" alt="${alt}" class="w-full h-56 object-cover" onerror="this.onerror=null;this.src='https://picsum.photos/seed/nba-${item.id}/600/400'">
                     <div class="p-6">
                         <span class="inline-block bg-nba-purple text-white text-xs font-semibold px-3 py-1 rounded-full mb-3">搜索结果</span>
                         <h3 class="font-bold text-xl mb-3">${title}</h3>
@@ -525,7 +542,7 @@
                 const kw = (input.value || '').trim();
                 if (!kw) return; // 不做空搜索
                 if (!cache) {
-                    const res = await fetch('../nba.json', { cache: 'no-store' });
+                    const res = await fetch('nba.json', { cache: 'no-store' });
                     cache = await res.json();
                 }
                 const lower = kw.toLowerCase();
@@ -544,6 +561,48 @@
                 mBtn.addEventListener('click', () => { input.value = mInput.value; doSearch(); });
                 mInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { input.value = mInput.value; doSearch(); } });
             }
+        })();
+
+        // NBA名人标签区：从 cn/nba.json 提取姓名并渲染
+        (function() {
+            const container = document.getElementById('famous-tags');
+            if (!container) return;
+
+            function extractNameFromTitle(title) {
+                if (!title) return '';
+                // 取标题开头或第一个标点/助词之前的片段，适配中英文
+                const cut = title.split(/[\s“”"'：:，,。!！?？—-]|的|曾|是/)[0].trim();
+                // 基本过滤：至少2个字符，且含中文或英文字母
+                if (!cut || cut.length < 2) return '';
+                if (!(/[\u4e00-\u9fa5A-Za-z]/.test(cut))) return '';
+                return cut;
+            }
+
+            (async () => {
+                try {
+                    const res = await fetch('nba.json', { cache: 'no-store' });
+                    const data = await res.json();
+                    const nameToLink = new Map();
+                    for (const item of data) {
+                        const name = extractNameFromTitle(item.title);
+                        if (!name) continue;
+                        if (!nameToLink.has(name)) {
+                            nameToLink.set(name, item.localLink || '#');
+                        }
+                    }
+                    const frag = document.createDocumentFragment();
+                    Array.from(nameToLink.entries()).slice(0, 60).forEach(([name, link]) => {
+                        const a = document.createElement('a');
+                        a.href = link;
+                        a.className = 'inline-block bg-nba-purple text-white text-sm font-semibold px-3 py-1 rounded-full hover:bg-purple-700 transition-colors duration-300';
+                        a.textContent = name;
+                        frag.appendChild(a);
+                    });
+                    container.appendChild(frag);
+                } catch (e) {
+                    console.error('famous-tags render error', e);
+                }
+            })();
         })();
 
         // 移动端菜单开关
