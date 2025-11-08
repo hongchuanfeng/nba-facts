@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Detail - NBA Fun Facts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        nba: {
+                            purple: '#552583',
+                            gold: '#FDB927',
+                            dark: '#171717',
+                            light: '#F5F5F5'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            }
+            .card-hover {
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+            .hero-gradient {
+                background: linear-gradient(to right, rgba(85, 37, 131, 0.9), rgba(24, 24, 24, 0.8));
+            }
+            .iframe-container {
+                position: relative;
+                width: 100%;
+                height: 600px;
+                transition: all 0.3s ease;
+            }
+            .iframe-container.fullscreen {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                z-index: 9999;
+                background: #000;
+                border-radius: 0;
+            }
+            .iframe-container.fullscreen iframe {
+                width: 100%;
+                height: calc(100% - 50px);
+            }
+            .iframe-container.fullscreen .fullscreen-header {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 10000;
+            }
+            body.fullscreen-mode {
+                overflow: hidden;
+            }
+        }
+    </style>
+    <link rel="alternate" hreflang="en" href="/game-detail.html">
+    <link rel="alternate" hreflang="zh-CN" href="/cn/game-detail.html">
+    <link rel="alternate" hreflang="x-default" href="/game-detail.html">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8WF0S87W7F"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);} 
+      gtag('js', new Date());
+      gtag('config', 'G-8WF0S87W7F');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7274710287377352"
+         crossorigin="anonymous"></script>
+    <link rel="icon" href="favicon.ico">
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- 导航栏 -->
+    <nav class="bg-nba-purple text-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-basketball-ball text-2xl text-nba-gold"></i>
+                <h1 class="text-xl font-bold"><a href="index.html">NBA Fun Facts</a></h1>
+            </div>
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="index.html" class="text-white hover:text-nba-gold transition-colors duration-300 flex items-center">
+                    <i class="fa fa-home mr-1"></i> Home
+                </a>
+                <a href="prediction_2025.html" class="text-white hover:text-nba-gold transition-colors duration-300 flex items-center">
+                    <i class="fa fa-trophy mr-1"></i> 2025 NBA Championship Prediction
+                </a>
+                <a href="game.html" class="text-white hover:text-nba-gold transition-colors duration-300 flex items-center">
+                    <i class="fa fa-gamepad mr-1"></i> Games
+                </a>
+                <a href="about.html" class="text-white hover:text-nba-gold transition-colors duration-300 flex items-center">
+                    <i class="fa fa-info-circle mr-1"></i> About
+                </a>
+                <a href="privacy.html" class="text-white hover:text-nba-gold transition-colors duration-300 flex items-center">
+                    <i class="fa fa-shield mr-1"></i> Privacy Policy
+                </a>
+                <a href="cn/index.html" class="text-white hover:text-nba-gold transition-colors duration-300 flex items-center">
+                    <i class="fa fa-globe mr-1"></i> 中文
+                </a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-toggle" class="text-white hover:text-nba-gold transition-colors duration-300">
+                    <i class="fa fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 移动端折叠菜单 -->
+    <div id="mobile-menu" class="md:hidden bg-nba-purple text-white px-4 py-3 hidden">
+        <div class="flex flex-col space-y-3">
+            <a href="index.html" class="text-white hover:text-nba-gold transition-colors duration-300 flex items-center">
+                <i class="fa fa-home mr-1"></i> Home
+            </a>
+            <a href="prediction_2025.html" class="text-white hover:text-nba-gold transition-colors duration-300 flex items-center">
+                <i class="fa fa-trophy mr-1"></i> 2025 NBA Championship Prediction
+            </a>
+            <a href="game.html" class="text-white hover:text-nba-gold transition-colors duration-300 flex items-center">
+                <i class="fa fa-gamepad mr-1"></i> Games
+            </a>
+            <a href="about.html" class="text-white hover:text-nba-gold transition-colors duration-300 flex items-center">
+                <i class="fa fa-info-circle mr-1"></i> About
+            </a>
+            <a href="privacy.html" class="text-white hover:text-nba-gold transition-colors duration-300 flex items-center">
+                <i class="fa fa-shield mr-1"></i> Privacy Policy
+            </a>
+            <a href="cn/index.html" class="text-white hover:text-nba-gold transition-colors duration-300 flex items-center">
+                <i class="fa fa-globe mr-1"></i> 中文 (Chinese)
+            </a>
+        </div>
+    </div>
+
+    <!-- Game Title -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-6">
+            <h1 id="game-title" class="text-3xl md:text-4xl font-bold text-gray-800">Loading...</h1>
+        </div>
+    </header>
+
+    <!-- Iframe Container -->
+    <section class="container mx-auto px-4 py-8">
+        <div id="iframe-container" class="iframe-container bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="bg-gray-800 px-4 py-2 flex justify-between items-center fullscreen-header">
+                <span class="text-white text-sm font-semibold">Game</span>
+                <button id="fullscreen-toggle" class="text-white hover:text-nba-gold transition-colors duration-300 px-3 py-1 rounded hover:bg-gray-700" title="Toggle Fullscreen">
+                    <i id="fullscreen-icon" class="fa fa-expand"></i>
+                </button>
+            </div>
+            <iframe id="game-iframe" src="" frameborder="0" class="w-full h-full" style="min-height: 600px;" allowfullscreen></iframe>
+        </div>
+    </section>
+
+    <!-- Game Detail -->
+    <section class="container mx-auto px-4 py-8">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Game Details</h2>
+            <div id="game-detail" class="text-gray-700 leading-relaxed whitespace-pre-line">
+                Loading game details...
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-nba-dark text-white pt-16 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fa fa-basketball-ball text-2xl text-nba-gold"></i>
+                        <span class="font-bold text-xl">NBA Fun Facts</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">Explore lesser-known NBA stories and become a true hoops expert</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-nba-gold transition-colors duration-300">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-nba-gold transition-colors duration-300">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-nba-gold transition-colors duration-300">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-nba-gold transition-colors duration-300">
+                            <i class="fa fa-youtube-play"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-nba-gold transition-colors duration-300">Home</a></li>
+                        <li><a href="game.html" class="text-gray-400 hover:text-nba-gold transition-colors duration-300">Games</a></li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-nba-gold transition-colors duration-300">About</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-nba-gold transition-colors duration-300">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Categories</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-nba-gold transition-colors duration-300">Player Stories</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-nba-gold transition-colors duration-300">Team History</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-nba-gold transition-colors duration-300">Stats Trivia</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-nba-gold transition-colors duration-300">Rules Facts</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Contact Us</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-center text-gray-400">
+                            <i class="fa fa-envelope mr-2"></i> hcf@foxmail.com
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fa fa-twitter mr-2"></i> @nbacoldfacts
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fa fa-map-marker mr-2"></i> Longhua District, Shenzhen
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-8 text-center text-gray-400 text-sm">
+                <p>© 2023 NBA Fun Facts - For learning and communication only; not affiliated with the NBA</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 回到顶部按钮 -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 bg-nba-purple hover:bg-purple-800 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 opacity-0 invisible">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // 获取URL参数
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            const results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // 加载游戏详情
+        async function loadGameDetail() {
+            const gameId = getUrlParameter('id');
+            if (!gameId) {
+                document.getElementById('game-title').textContent = 'Game not found';
+                document.getElementById('game-detail').textContent = 'Please select a game from the games page.';
+                return;
+            }
+
+            try {
+                const response = await fetch('BasketballGames-all.json');
+                const games = await response.json();
+                const game = games.find(g => g.id === parseInt(gameId));
+                console.log(game);
+                if (!game) {
+                    document.getElementById('game-title').textContent = 'Game not found';
+                    document.getElementById('game-detail').textContent = 'The requested game could not be found.';
+                    return;
+                }
+
+                // 设置游戏标题
+                const formattedName = game.name
+                    .split('-')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ');
+                document.getElementById('game-title').textContent = formattedName;
+
+                // 设置iframe
+                const iframe = document.getElementById('game-iframe');
+                if (game.link) {
+                    iframe.src = game.link;
+                } else if (game.href) {
+                    // 如果没有link，可以尝试使用href，但可能需要处理跨域问题
+                    iframe.src = game.href;
+                } else {
+                    iframe.style.display = 'none';
+                    document.getElementById('iframe-container').innerHTML = '<div class="p-8 text-center text-gray-500">Game link not available</div>';
+                }
+
+                // 设置游戏详情
+                const detailDiv = document.getElementById('game-detail');
+                if (game.detail) {
+                    detailDiv.textContent = game.detail;
+                } else {
+                    detailDiv.textContent = 'No detailed information available for this game.';
+                }
+            } catch (error) {
+                console.error('Error loading game detail:', error);
+                document.getElementById('game-title').textContent = 'Error loading game';
+                document.getElementById('game-detail').textContent = 'Failed to load game information. Please try again later.';
+            }
+        }
+
+        // 全屏切换功能
+        let isFullscreen = false;
+        const fullscreenToggle = document.getElementById('fullscreen-toggle');
+        const iframeContainer = document.getElementById('iframe-container');
+        const fullscreenIcon = document.getElementById('fullscreen-icon');
+        const gameTitle = document.getElementById('game-title').parentElement;
+        const gameDetailSection = document.getElementById('game-detail').closest('section');
+        const footer = document.querySelector('footer');
+        const nav = document.querySelector('nav');
+        const backToTopBtn = document.getElementById('back-to-top');
+
+        function enterFullscreen() {
+            // 进入全屏
+            iframeContainer.classList.add('fullscreen');
+            fullscreenIcon.classList.remove('fa-expand');
+            fullscreenIcon.classList.add('fa-compress');
+            document.body.classList.add('fullscreen-mode');
+            // 隐藏其他内容
+            if (nav) nav.style.display = 'none';
+            if (gameTitle) gameTitle.style.display = 'none';
+            if (gameDetailSection) gameDetailSection.style.display = 'none';
+            if (footer) footer.style.display = 'none';
+            if (backToTopBtn) backToTopBtn.style.display = 'none';
+            isFullscreen = true;
+        }
+
+        function exitFullscreen() {
+            // 退出全屏
+            iframeContainer.classList.remove('fullscreen');
+            fullscreenIcon.classList.remove('fa-compress');
+            fullscreenIcon.classList.add('fa-expand');
+            document.body.classList.remove('fullscreen-mode');
+            // 显示其他内容
+            if (nav) nav.style.display = '';
+            if (gameTitle) gameTitle.style.display = '';
+            if (gameDetailSection) gameDetailSection.style.display = '';
+            if (footer) footer.style.display = '';
+            if (backToTopBtn) backToTopBtn.style.display = '';
+            isFullscreen = false;
+        }
+
+        fullscreenToggle.addEventListener('click', () => {
+            if (!isFullscreen) {
+                enterFullscreen();
+            } else {
+                exitFullscreen();
+            }
+        });
+
+        // ESC键退出全屏
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && isFullscreen) {
+                exitFullscreen();
+            }
+        });
+
+        // 回到顶部按钮功能
+        const backToTopButton = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible');
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 移动端菜单开关
+        (function(){
+            const btn = document.getElementById('mobile-menu-toggle');
+            const menu = document.getElementById('mobile-menu');
+            if (!btn || !menu) return;
+            btn.addEventListener('click', function(){
+                menu.classList.toggle('hidden');
+            });
+        })();
+
+        // 页面加载时加载游戏详情
+        loadGameDetail();
+    </script>
+</body>
+</html>
+
